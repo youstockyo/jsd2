@@ -1,0 +1,60 @@
+html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+/*****************************/
+
+body {
+	font-family: "Domine", serif;
+	color: #333;
+}
+
+h1, h2 {
+	font-family: "Montserrat", sans-serif;
+	line-height: 1.5em;
+}
+
+h1 {
+	color: #333;
+	border-bottom: 1px solid #555;
+	margin-bottom: 30px;
+	padding-bottom: 15px;
+}
+
+a {
+	color: #08c;
+	text-decoration: none;
+}
+
+li {
+	padding-bottom: 15px;
+}
+
+/*****************************/
+
+.columns-container {
+	float: left;
+	width: 100%;
+}
+
+.l-column {
+	width: 33.333%;
+	float: left;
+}
+
+.l-column h2 {
+	max-width: 400px;
+	min-height: 80px;
+	border-bottom: 1px solid #333;
+}
+
+/*****************************/
+
+@media (max-width: 1250px){
+	.l-column {
+		width: 100%;
+	}
+}
