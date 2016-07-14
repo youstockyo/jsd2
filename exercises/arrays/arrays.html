@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Arrays</title>
+</head>
+<body>
+	<h1>Arrays</h1>
+	<script>
+		var days = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+		days.push("Sat");
+
+		// Technique #1 for looping over an array
+		// - using forEach method with callback function
+		console.log('--- for each technique ---')
+		days.forEach(printDay);
+		function printDay(item, index) {
+			console.log(index, item);
+		};
+
+		// Technique #2 for looping over an array
+		// - using the for loop
+		console.log('--- for loop technique ---')
+		for (var i = 0; i < days.length; i++) {
+			console.log(days[i]);
+		}
+
+	
+	</script>
+</body>
+</html>
