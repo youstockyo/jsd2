@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<h1>Object Intro</h1>
+	<script>
+
+		var bus = {
+			route: "38R",
+		};
+
+		var person = {
+			"firstName": "Will",
+			"lastName": "McLellarn",
+			"distance": 0.7,
+			"languages": [
+				"English",
+				"Spanish"
+			]
+		};
+
+		var car = {
+			"color": "green",
+			"make": "Ford",
+			"model": "Escape",
+			"ac": true,
+			"locked": true,
+			"unlock": function() {
+				this.locked = false;
+			}
+		};
+
+	</script>
+</body>
+</html>
