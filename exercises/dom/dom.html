@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DOM Tree</title>
+</head>
+<body>
+	<h1>DOM Tree</h1>
+
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Labore dolorem eveniet, maxime quisquam excepturi officiis cupiditate ullam. Quibusdam illum debitis perferendis quasi, commodi, amet quia nesciunt aut vero odio. Minus?</p>
+
+	<div>
+		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, doloremque officiis consectetur aliquam error modi eligendi culpa, delectus asperiores minima assumenda cumque vitae itaque quibusdam similique fugit ut ullam consequatur.</p>
+	</div>
+	
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur dolores repellendus animi. Ullam reprehenderit consequuntur fugiat distinctio atque asperiores facilis deserunt dignissimos porro, labore, quisquam doloribus soluta, quibusdam, accusantium hic!</p>
+
+	<ul id="menu">
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+	</ul>
+
+	<style>
+		div p {
+			color: blue;
+		}
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<script>
+
+		// Getting elements from DOM
+
+		var div = document.querySelector("div")
+		var p = document.querySelector("div p")
+
+		function updateParagraph(text) { 
+			console.log("updateParagraph");
+			p.innerHTML = text;
+		}
+
+		var $div = $("div");
+		var $p = $("div p");
+
+		function updateParagraphWithJQuery(text) {
+			console.log("updateParagraphWithJQuery");
+			$p.html(text);
+		}
+
+		// Adding elements to DOM
+
+		// Structure
+		//-----------------------------------------------------------------
+		var menu = document.querySelector("#menu");
+
+		// Update Page functions
+		//-----------------------------------------------------------------
+		function addListItem(text) {
+			console.log('addListItem', text);
+
+			// Error checking: "Return Early"
+
+			// Step 1: Create new Element
+			var li = document.createElement("li");
+			// Step 2: Add content / attributes to Elements
+			li.innerHTML = text;
+			// Step 3: Append new Element to DOM
+			menu.appendChild(li);
+		}
+
+	</script>
+
+</body>
+</html>
