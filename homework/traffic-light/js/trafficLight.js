@@ -28,12 +28,10 @@ cautionButton.addEventListener('click', cautionFlash);
 function stop() {
 	stopLight.classList.toggle('stop');
 
-	// If slow or go or caution lights are on, turn them off
-	if (slowLight.classList.contains('slow') || goLight.classList.contains('go') || slowLight.classList.contains('caution')) {
-		slowLight.classList.remove('slow');
-		goLight.classList.remove('go');
-		slowLight.classList.remove('caution');
-	}
+	// Turn off other lights
+	slowLight.classList.remove('slow');
+	goLight.classList.remove('go');
+	slowLight.classList.remove('caution');
 
 	// Disable caution timer
 	clearInterval(cautionLight);
@@ -42,12 +40,10 @@ function stop() {
 function slow() {
 	slowLight.classList.toggle('slow')
 
-	// If stop or go or caution lights are on, turn them off
-	if (stopLight.classList.contains('stop') || goLight.classList.contains('go') || slowLight.classList.contains('caution')) {
-		stopLight.classList.remove('stop');
-		goLight.classList.remove('go');
-		slowLight.classList.remove('caution');
-	}
+	// Turn off other lights
+	stopLight.classList.remove('stop');
+	goLight.classList.remove('go');
+	slowLight.classList.remove('caution');
 
 	// Disable caution timer
 	clearInterval(cautionLight);
@@ -56,12 +52,10 @@ function slow() {
 function go() {
 	goLight.classList.toggle('go');
 
-	// If stop or slow or caution lights are on, turn them off
-	if (stopLight.classList.contains('stop') || slowLight.classList.contains('slow') || slowLight.classList.contains('caution')) {
-		stopLight.classList.remove('stop');
-		slowLight.classList.remove('slow');
-		slowLight.classList.remove('caution');
-	}
+	// Turn off other lights
+	stopLight.classList.remove('stop');
+	slowLight.classList.remove('slow');
+	slowLight.classList.remove('caution');
 
 	// Disable caution timer
 	clearInterval(cautionLight);
@@ -74,10 +68,8 @@ function caution() {
 function cautionFlash() {
 	cautionLight = setInterval(caution, 700);
 
-	// If lights are on, turn them off
-	if (stopLight.classList.contains('stop') || slowLight.classList.contains('slow') || goLight.classList.contains('go')) {
-		stopLight.classList.remove('stop');
-		slowLight.classList.remove('slow');
-		goLight.classList.remove('go');
-	}
+	// Turn off other lights
+	stopLight.classList.remove('stop');
+	slowLight.classList.remove('slow');
+	goLight.classList.remove('go');
 }
