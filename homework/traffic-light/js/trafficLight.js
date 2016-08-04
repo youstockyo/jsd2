@@ -66,6 +66,7 @@ function caution() {
 }
 
 function cautionFlash() {
+	clearInterval(cautionLight);
 	cautionLight = setInterval(caution, 700);
 
 	// Turn off other lights
