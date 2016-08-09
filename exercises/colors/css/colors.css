@@ -1,0 +1,28 @@
+body {
+	background: thistle;
+	color: navy;
+	font-size: 16px;
+	padding: 50px;
+	font-family: 'Helvetica';
+}
+
+li {
+	margin: 10px;
+	padding: 10px;
+}
+
+.mediumturquoise {
+	background: mediumturquoise;
+}
+
+.mediumspringgreen {
+	background: mediumspringgreen;
+}
+
+.olive {
+	background: olive;
+}
+
+.khaki {
+	background: khaki;
+}
