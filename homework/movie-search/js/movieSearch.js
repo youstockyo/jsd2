@@ -26,11 +26,13 @@ results.addEventListener('click', movieDetails)
 function searchMovies(event) {
 	event.preventDefault();
 
-	// get value of the form input
+	// Get value of the form input
 	var movie = search.value;
-	// make a request to the api with the search terms
+
+	// Set API request URL
 	var url = 'https://www.omdbapi.com/?s=' + movie;
 
+	// If the search term is valid, make the API request
 	if (movie != '') {
 		search.classList.remove('error');
 		// Hide placeholder details div
@@ -61,6 +63,7 @@ function movieDetails(event) {
 	var url = 'https://www.omdbapi.com/?i=' + target.id;
 	$.getJSON(url, displayMovieDetails)
 }
+
 
 // Update page
 // ----------------------------------------------
