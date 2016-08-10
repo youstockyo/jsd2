@@ -29,7 +29,7 @@ function searchMovies(event) {
 	// get value of the form input
 	var movie = search.value;
 	// make a request to the api with the search terms
-	var url = 'http://www.omdbapi.com/?s=' + movie;
+	var url = 'https://www.omdbapi.com/?s=' + movie;
 
 	if (movie != '') {
 		search.classList.remove('error');
@@ -58,7 +58,7 @@ function movieDetails(event) {
 	details.classList.remove('hide');
 
 	// Use the target id (imdb id) to get data from the API 
-	var url = 'http://www.omdbapi.com/?i=' + target.id;
+	var url = 'https://www.omdbapi.com/?i=' + target.id;
 	$.getJSON(url, displayMovieDetails)
 }
 
@@ -109,5 +109,5 @@ function displayMovieDetails(movie) {
 
 	detailsTitle.innerHTML = movie.Title;
 	detailsPlot.innerHTML = movie.Plot;
-	detailsLink.setAttribute('href', 'http://www.imdb.com/title/' + movie.imdbID);
+	detailsLink.setAttribute('href', 'https://www.imdb.com/title/' + movie.imdbID);
 }
