@@ -17,16 +17,26 @@
 	<input class="zip" placeholder="Zip code">
 </form>
 
-<ul class="results">
-	<script id="restaurant-template" type="text/x-handlebars-template">
-		{{#each}}
-			<li>
-				<img src="{{image_url}}">
-				<h2>{{name}}</h2>
-				<p>{{address}}</p>
-			</li>
-		{{/each}}
-	</script>
+<div class="restaurant-available"></div>
+
+<ul class="results"></ul>
+
+<script id="restaurant-count" type="text/x-handlebars-template">
+	<p><span class="bold">{{total_entries}}</span> available restaurants in {{restaurants.0.postal_code}}</p>
+</script>
+
+<script id="restaurant-template" type="text/x-handlebars-template">
+	{{#each this}}
+		<li>
+			<img src="{{image_url}}">
+			<h2>{{name}}</h2>
+			<p>{{address}}</p>
+			<p>
+				<a href="{{reserve_url}}">Make a reservation</a>
+			</p>
+		</li>
+	{{/each}}
+</script>
 
 <!--
 	<li>
@@ -36,7 +46,7 @@
 	</li>
 -->
 
-</ul>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>

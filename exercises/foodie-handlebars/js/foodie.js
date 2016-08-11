@@ -3,6 +3,10 @@
 var form = document.querySelector("form");
 var zip = document.querySelector("form .zip");
 var results = document.querySelector(".results");
+var restaurantAvailable = document.querySelector(".restaurant-available");
+
+var restaurantTemplate = document.querySelector("#restaurant-template");
+var restaurantCount = document.querySelector("#restaurant-count");
 
 
 // Event
@@ -31,26 +35,14 @@ function updateRestaurants(json) {
 	// clears out the old results
 	results.innerHTML = '';
 
-	// add new result for each item in array
-	json.restaurants.forEach(createRestaurant);
+	// Compiling the template source from <script> tag
+	// into a Handlebars template
+	var template = Handlebars.compile(restaurantTemplate.innerHTML);
+	var restaurantHTML = template(json.restaurants);
+	results.innerHTML = restaurantHTML;
 
-	var source = document.querySelector('#restaurant-template');
-	console.log(source);
+	var countTemplate = Handlebars.compile(restaurantCount.innerHTML);
+	var countHTML = countTemplate(json);
+	restaurantAvailable.innerHTML = countHTML;
+	console.log(json.restaurants);
 }
-
-
-function createRestaurant(restaurant) {
-	var li = document.createElement("li");
-
-	var template = 
-		'<img src="' + restaurant.image_url + '">' +
-		'<h2>' + restaurant.name + '</h2>' +
-		'<p>' + restaurant.address + '</p>';
-	
-	li.innerHTML = template;
-	results.appendChild(li);
-}
-
-
-
-
