@@ -51,3 +51,5 @@ Did it create a valid JSON string?
 */ 
 
 var jsonLinks = JSON.stringify(links);
+console.log('jsonLinks', jsonLinks);
+console.log('Yes!');
