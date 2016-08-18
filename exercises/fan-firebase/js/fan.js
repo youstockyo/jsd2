@@ -11,11 +11,11 @@ var messageTemplate = document.querySelector('#message-template');
 // ------------------------------------------------
 var app = {
 	messages: []
-}
+};
 
 // Events
 // ------------------------------------------------
-// window.addEventListener('load', refreshMessages);
+window.addEventListener('load', refreshMessages);
 form.addEventListener('submit', postMessage);
 
 
@@ -25,20 +25,21 @@ function postMessage(event) {
 	event.preventDefault();
 
 	var message = {
-		id: '',
+		id: assignID(),
 		content: messageInput.value,
 		voteCount: '',
-		dateCreated: '',
-		dummyBlock: 'New post. Yes!!<i class="fa fa-trash pull-right delete"></i><i class="fa fa-thumbs-up pull-right"></i><i class="fa fa-thumbs-down pull-right"></i><div class="pull-right">0</div>'
+		dateCreated: getPostDate()
 	}
 
 	app.messages.push(message);
 	createMessage(message);
+	saveMessages();
+
+	form.reset();
 }
 
 
 function createMessage(message) {
-
 	// Handlebars work
 	var template = Handlebars.compile(messageTemplate.innerHTML);
 	var templateHTML = template(app.messages);
@@ -49,11 +50,42 @@ function createMessage(message) {
 // Message storage
 // ------------------------------------------------
 function refreshMessages() {
-	console.log('refreshMessages');
+	if (localStorage.getItem('app') == null) {
+		return;
+	}
+
+	app = localStorage.getItem('app');
+	app = JSON.parse(app);
+
+	app.messages.forEach(createMessage);
+}
+
+
+function saveMessages() {
+	var json = JSON.stringify(app);
+	localStorage.setItem('app', json);
 }
 
 
 // Helper functions
 // ------------------------------------------------
-// TO DO: UUID
-// TO DO: Timestamp
+// Assign an ID to a message
+function assignID() {
+	var id = '';
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+	for (var i = 0; i < 8; i++) {
+		id += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+
+	return id;
+}
+
+
+// Get timestamp for a message
+function getPostDate() {
+	var now = new Date();
+	postDate = now.toUTCString();
+
+	return postDate;
+}
