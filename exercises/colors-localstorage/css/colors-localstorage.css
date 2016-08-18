@@ -1,0 +1,29 @@
+body {
+	background: thistle;
+	color: navy;
+	font-size: 16px;
+	padding: 20px;
+	font-family: arial;
+}
+
+li {
+	padding: 10px 0;
+	margin: 10px 0;
+	border-top: 1px solid #000;
+}
+
+.olive {
+	background-color: olive;
+}
+.bisque {
+	background-color: bisque;
+}
+.plum {
+	background-color: plum;
+}
+.sienna {
+	background-color: sienna;
+}
+.palevioletred {
+	background-color: palevioletred;
+}
