@@ -9,6 +9,8 @@ var messageTemplate = document.querySelector('#message-template');
 
 // Setup
 // ------------------------------------------------
+var fbRef = new Firebase('https://fanpage-20dda.firebaseio.com/');
+
 var app = {
 	messages: []
 };
@@ -17,6 +19,7 @@ var app = {
 // ------------------------------------------------
 window.addEventListener('load', refreshMessages);
 form.addEventListener('submit', postMessage);
+messageBoard.addEventListener('click', messageAction);
 
 
 // Event Handlers
@@ -27,7 +30,9 @@ function postMessage(event) {
 	var message = {
 		id: assignID(),
 		content: messageInput.value,
-		voteCount: '',
+		voteCount: 0,
+		voteUp: 0,
+		voteDown: 0,
 		dateCreated: getPostDate()
 	}
 
@@ -47,23 +52,38 @@ function createMessage(message) {
 }
 
 
-// Message storage
+function messageAction(event) {
+	var target = event.target;
+	if (target.classList.contains('fa-trash')) {
+		deleteMessage(event);
+	} else if (target.classList.contains('fa-thumbs-up')) {
+		addVote(event);
+	} else if (target.classList.contains('fa-thumbs-down')) {
+		addVote(event);
+	} else {
+		return;
+	}
+}
+
+
+// Firebase functions
 // ------------------------------------------------
-function refreshMessages() {
-	if (localStorage.getItem('app') == null) {
+function dataChanged(snapshot) {
+	if (snapshot.val() === null) {
 		return;
 	}
 
-	app = localStorage.getItem('app');
-	app = JSON.parse(app);
-
+	app = snapshot.val();
+	messageBoard.innerHTML = '';
 	app.messages.forEach(createMessage);
+}
+function refreshMessages() {
+	fbRef.on('value', dataChanged);
 }
 
 
 function saveMessages() {
-	var json = JSON.stringify(app);
-	localStorage.setItem('app', json);
+	fbRef.set(app);
 }
 
 
@@ -88,4 +108,50 @@ function getPostDate() {
 	postDate = now.toUTCString();
 
 	return postDate;
+}
+
+
+// FOR UPDATING VOTES:
+// Loop through the data & if the id # of the click target parent li 
+// matches the id # entry in the array, update that entry's vote counts
+
+// Add to vote count
+function addVote(event) {
+	var target = event.target;
+
+	app.messages.forEach(updateVotes);
+
+	function updateVotes(message) {
+		var id = message.id;
+		var li = target.closest('li');
+
+		if (li.id === id) {
+			message.voteCount = message.voteCount + 1;
+
+			if (target.classList.contains('fa-thumbs-up')) {
+				message.voteUp = message.voteUp +1;
+			} else if (target.classList.contains('fa-thumbs-down')) {
+				message.voteDown = message.voteDown + 1;
+			}
+
+			saveMessages();
+		}
+	}
+}
+
+
+// Delete message
+function deleteMessage(event) {
+	var target = event.target;
+
+	app.messages.forEach(deleteIt);
+
+	function deleteIt(message) {
+		var id = message.id;
+		var li = target.closest('li');
+
+		if (li.id === id) {
+			console.log('delete');
+		}
+	}
 }

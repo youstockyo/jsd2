@@ -51,7 +51,7 @@
 
           <script id="message-template" type="text/x-handlebars-template">
             {{#each this}}
-              <li>{{content}}<i class="fa fa-trash pull-right delete"></i><i class="fa fa-thumbs-up pull-right"></i><i class="fa fa-thumbs-down pull-right"></i><div class="pull-right">{{voteCount}}</div></li>
+              <li id="{{id}}">{{content}}<i class="fa fa-trash pull-right delete"></i><i class="fa fa-thumbs-up pull-right"></i><i class="fa fa-thumbs-down pull-right"></i><div class="pull-right">{{voteCount}}</div></li>
             {{/each}}
           </script>
         </div>
