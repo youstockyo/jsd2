@@ -49,6 +49,7 @@ home.addEventListener('click', showDefaultSource);
 function togglePopUp(e) {
 	e.preventDefault();
 	popUp.classList.add('hidden');
+	articlePreviewLink.classList.remove('hidden');
 }
 
 function articlePreview(e) {
@@ -86,7 +87,8 @@ function showDefaultSource(e) {
 //---------------------------
 function getArticles() {
 	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
-	$.getJSON(url, displayArticles);
+	$.getJSON(url, displayArticles)
+		.fail(failedGet);
 }
 
 
@@ -121,4 +123,15 @@ function articlePreviewContent(e) {
 	articlePreviewTitle.innerHTML = sourceJson.articles[i].title;
 	articlePreviewDesc.innerHTML = sourceJson.articles[i].description;
 	articlePreviewLink.setAttribute('href', sourceJson.articles[i].url);
+}
+
+// Error messaging
+function failedGet() {
+	console.log('get json failed');
+	popUp.classList.remove('loader');
+
+	articlePreviewTitle.innerHTML = '¯\\_(ツ)_/¯'
+	articlePreviewDesc.classList.add('error');
+	articlePreviewDesc.innerHTML = 'Oops, we can\'t load that feed right now.';
+	articlePreviewLink.classList.add('hidden');
 }
