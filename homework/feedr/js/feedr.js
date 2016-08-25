@@ -33,6 +33,7 @@ var currentSource       = document.querySelector('.current-source');
 var sourcesDropdown     = document.querySelector('.news-sources');
 var home                = document.querySelector('.home');
 var search              = document.querySelector('#search');
+var searchInput         = document.querySelector('#search input');
 
 
 // Events
@@ -40,6 +41,7 @@ var search              = document.querySelector('#search');
 window.addEventListener('load', showHome);
 home.addEventListener('click', showHome);
 search.addEventListener('click', toggleSearch);
+searchInput.addEventListener('keyup', filterSearch);
 closePopUp.addEventListener('click', togglePopUp);
 articles.addEventListener('click', displayArticlePreview);
 sourcesDropdown.addEventListener('click', selectSource);
@@ -91,6 +93,9 @@ function showHome() {
 		// Copy the consolidated data to
 		// sourceJson for easy access
 		sourceJson = homeArticles;
+
+		// Set dropdown source to 'All'
+		currentSource.innerHTML = 'All';
 	}
 }
 
@@ -166,17 +171,25 @@ function displayArticlePreview(e) {
 }
 
 
-// Close PopUp
+// Search
 //---------------------------
-function togglePopUp(e) {
+function filterSearch(e) {
 	e.preventDefault();
-	popUp.classList.add('hidden');
-	articlePreviewLink.classList.remove('hidden');
+
+	var article = document.querySelectorAll('.article');
+	var filter = searchInput.value;
+	console.log('searching...', filter);
+	// if (!article.innerHTML.includes(filter)) {
+	// 	console.log(!article.innerHTML.includes(filter), 'going to hide')
+	// 	// article.classList.add('hidden');
+	// }
+
+	// toggle search bar if enter is pressed
+	if (e.keyCode == 13) {
+		search.classList.toggle('active');
+	}
 }
 
-
-// Toggle search bar
-//---------------------------
 function toggleSearch(e) {
 	e.preventDefault();
 	var target = e.target;
@@ -184,6 +197,15 @@ function toggleSearch(e) {
 	if (target.tagName == 'IMG') {
 		search.classList.toggle('active');
 	};
+}
+
+
+// Close PopUp
+//---------------------------
+function togglePopUp(e) {
+	e.preventDefault();
+	popUp.classList.add('hidden');
+	articlePreviewLink.classList.remove('hidden');
 }
 
 
@@ -198,3 +220,14 @@ function failedGet() {
 	articlePreviewDesc.innerHTML = 'Oops, we can\'t load that feed right now.';
 	articlePreviewLink.classList.add('hidden');
 }
+
+
+// Helper functions
+//---------------------------
+Handlebars.registerHelper('trimDate', function(publishedAt) {
+	if (publishedAt != null) {
+		return publishedAt.substring(0,10);
+	} else {
+		return '---';
+	}
+});
