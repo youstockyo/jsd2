@@ -16,7 +16,6 @@ var sources = [
 ];
 
 var newsKey    = '5650db7851ef4895b2f40e5366fac400';
-var newsSource = 'espn';
 var sourceJson;
 
 
@@ -39,70 +38,27 @@ var search              = document.querySelector('#search');
 // Events
 //---------------------------
 window.addEventListener('load', showHome);
-closePopUp.addEventListener('click', togglePopUp);
-articles.addEventListener('click', articlePreview);
-sourcesDropdown.addEventListener('click', selectSource);
 home.addEventListener('click', showHome);
 search.addEventListener('click', toggleSearch);
-
-
-// Event Handlers
-//---------------------------
-function togglePopUp(e) {
-	e.preventDefault();
-	popUp.classList.add('hidden');
-	articlePreviewLink.classList.remove('hidden');
-}
-
-function articlePreview(e) {
-	e.preventDefault();
-	popUp.classList.remove('loader');
-	popUp.classList.remove('hidden');
-	articlePreviewContent(e);
-}
-
-function selectSource(e) {
-	e.preventDefault();
-	var target = e.target.closest('li');
-	var i = 0;
-
-	while (target = target.previousElementSibling) {
-		i++;
-	}
-
-	newsSource = sources[i].code;
-	currentSource.innerHTML = sources[i].name;
-	popUp.classList.remove('hidden');
-	popUp.classList.add('loader');
-	getArticles(newsSource);
-}
-
-function toggleSearch(e) {
-	e.preventDefault();
-	var target = e.target;
-
-	if (target.tagName == 'IMG') {
-		search.classList.toggle('active');
-	};
-}
+closePopUp.addEventListener('click', togglePopUp);
+articles.addEventListener('click', displayArticlePreview);
+sourcesDropdown.addEventListener('click', selectSource);
 
 
 // Display Articles
 // (Consolidated Home View)
 //---------------------------
-
 function showHome() {
 	var homeArticles = [];
 	var counter = sources.length;
 
-	// For each source defined, getHomeArticles
-	// This makes 3 API calls
+	// For each source defined, make an API call
 	sources.forEach(getHomeArticles);
 
 	function getHomeArticles(newsSource) {
-		console.log('newsSource code', newsSource.code);
 		var url = 'https://newsapi.org/v1/articles?source=' + newsSource.code + '&apiKey=' + newsKey;
-		$.getJSON(url, compileHomeArticles);
+		$.getJSON(url, compileHomeArticles)
+		.fail(failedGet);
 	}
 
 	function compileHomeArticles(json) {
@@ -140,36 +96,61 @@ function showHome() {
 
 
 // Display Articles
-// (Single Source)
+// (Single Source View)
 //---------------------------
-// Access API
-function getArticles(newsSource) {
+function selectSource(e) {
+	e.preventDefault();
+
+	var target = e.target.closest('li');
+	var i = 0;
+
+	// Show loading overlay
+	popUp.classList.remove('hidden');
+	popUp.classList.add('loader');
+
+	// Get index ('i') of the clicked li element
+	while (target = target.previousElementSibling) {
+		i++;
+	}
+
+	// Set source to clicked source
+	newsSource = sources[i].code;
+	currentSource.innerHTML = sources[i].name;
+
+	// Make API call
 	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
 	$.getJSON(url, displayArticles)
-		.fail(failedGet);
+	.fail(failedGet);
+
+	// Populate articles in main section
+	function displayArticles(json) {
+		main.innerHTML = '';
+
+		// Handlebars work
+		var template = Handlebars.compile(articleTemplate.innerHTML);
+		var articleHTML = template(json.articles);
+		main.innerHTML = articleHTML;
+
+		// Hide loading overlay
+		popUp.classList.add('hidden');
+
+		// Copy over data to sourceJson for easy access
+		sourceJson = json.articles;
+	}
+
 }
 
-// Populate articles view
-function displayArticles(json) {
-	main.innerHTML = '';
 
-	var template = Handlebars.compile(articleTemplate.innerHTML);
-	var articleHTML = template(json.articles);
-	main.innerHTML = articleHTML;
+// Display article preview
+//---------------------------
+function displayArticlePreview(e) {
+	e.preventDefault();
 
-	popUp.classList.add('hidden');
-
-	// Copy over data to sourceJson for easy access
-	sourceJson = json.articles;
-}
-
-// Show preview
-function articlePreviewContent(e) {
 	// Change the click target to the closest article element
 	var target = e.target.closest('article');
 	var i = 0;
 
-	// Get index of the clicked article element
+	// Get index ('i') of the clicked article element
 	while (target = target.previousElementSibling) {
 		i++;
 	}
@@ -178,9 +159,36 @@ function articlePreviewContent(e) {
 	articlePreviewTitle.innerHTML = sourceJson[i].title;
 	articlePreviewDesc.innerHTML = sourceJson[i].description;
 	articlePreviewLink.setAttribute('href', sourceJson[i].url);
+
+	// Show preview
+	popUp.classList.remove('loader');
+	popUp.classList.remove('hidden');
 }
 
+
+// Close PopUp
+//---------------------------
+function togglePopUp(e) {
+	e.preventDefault();
+	popUp.classList.add('hidden');
+	articlePreviewLink.classList.remove('hidden');
+}
+
+
+// Toggle search bar
+//---------------------------
+function toggleSearch(e) {
+	e.preventDefault();
+	var target = e.target;
+
+	if (target.tagName == 'IMG') {
+		search.classList.toggle('active');
+	};
+}
+
+
 // Error messaging
+//---------------------------
 function failedGet() {
 	console.log('get json failed');
 	popUp.classList.remove('loader');
@@ -190,10 +198,3 @@ function failedGet() {
 	articlePreviewDesc.innerHTML = 'Oops, we can\'t load that feed right now.';
 	articlePreviewLink.classList.add('hidden');
 }
-
-
-
-
-
-// Helper functions
-//---------------------------
