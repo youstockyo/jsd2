@@ -18,6 +18,7 @@ var sources = [
 var newsKey    = '5650db7851ef4895b2f40e5366fac400';
 var newsSource = 'espn';
 var sourceJson;
+var homeArticles = [];
 
 
 // Structure
@@ -33,15 +34,17 @@ var articlePreviewLink  = document.querySelector('#popUp .popUpAction');
 var currentSource       = document.querySelector('.current-source');
 var sourcesDropdown     = document.querySelector('.news-sources');
 var home                = document.querySelector('.home');
+var search              = document.querySelector('#search');
 
 
 // Events
 //---------------------------
-window.addEventListener('load', getArticles)
+window.addEventListener('load', showHome);
 closePopUp.addEventListener('click', togglePopUp);
 articles.addEventListener('click', articlePreview);
 sourcesDropdown.addEventListener('click', selectSource);
 home.addEventListener('click', showDefaultSource);
+search.addEventListener('click', toggleSearch);
 
 
 // Event Handlers
@@ -72,20 +75,29 @@ function selectSource(e) {
 	currentSource.innerHTML = sources[i].name;
 	popUp.classList.remove('hidden');
 	popUp.classList.add('loader');
-	getArticles();
+	getArticles(newsSource);
 }
 
 function showDefaultSource(e) {
 	e.preventDefault();
 	newsSource = sources[0].code;
 	currentSource.innerHTML = sources[0].name;
-	getArticles();
+	getArticles(newsSource);
+}
+
+function toggleSearch(e) {
+	e.preventDefault();
+	var target = e.target;
+
+	if (target.tagName == 'IMG') {
+		search.classList.toggle('active');
+	};
 }
 
 
 // Access API
 //---------------------------
-function getArticles() {
+function getArticles(newsSource) {
 	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
 	$.getJSON(url, displayArticles)
 		.fail(failedGet);
@@ -94,7 +106,7 @@ function getArticles() {
 
 // Display Articles
 //---------------------------
-// Populate main view
+// Populate articles view
 function displayArticles(json) {
 	main.innerHTML = '';
 
@@ -135,3 +147,34 @@ function failedGet() {
 	articlePreviewDesc.innerHTML = 'Oops, we can\'t load that feed right now.';
 	articlePreviewLink.classList.add('hidden');
 }
+
+
+function getHomeArticles(newsSource) {
+	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
+	$.getJSON(url, displayHomeArticles);
+}
+
+function displayHomeArticles(json) {
+	console.log('displayHomeArticles', json.articles);
+	homeArticles.push(json.articles);
+	homeArticles = [].concat.apply([], homeArticles);
+
+	
+}
+
+// Consolidated home view
+function showHome() {
+	getArticles(newsSource);
+	// forEach source call getArticles()
+	sources.forEach(getSource);
+
+	function getSource(i) {
+		var grabIt = getHomeArticles(i.code);
+
+		console.log(i.code);
+	}
+}
+
+
+// Helper functions
+//---------------------------
