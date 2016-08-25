@@ -18,7 +18,6 @@ var sources = [
 var newsKey    = '5650db7851ef4895b2f40e5366fac400';
 var newsSource = 'espn';
 var sourceJson;
-var homeArticles = [];
 
 
 // Structure
@@ -43,7 +42,7 @@ window.addEventListener('load', showHome);
 closePopUp.addEventListener('click', togglePopUp);
 articles.addEventListener('click', articlePreview);
 sourcesDropdown.addEventListener('click', selectSource);
-home.addEventListener('click', showDefaultSource);
+home.addEventListener('click', showHome);
 search.addEventListener('click', toggleSearch);
 
 
@@ -78,13 +77,6 @@ function selectSource(e) {
 	getArticles(newsSource);
 }
 
-function showDefaultSource(e) {
-	e.preventDefault();
-	newsSource = sources[0].code;
-	currentSource.innerHTML = sources[0].name;
-	getArticles(newsSource);
-}
-
 function toggleSearch(e) {
 	e.preventDefault();
 	var target = e.target;
@@ -95,17 +87,68 @@ function toggleSearch(e) {
 }
 
 
-// Access API
+// Display Articles
+// (Consolidated Home View)
 //---------------------------
+
+function showHome() {
+	var homeArticles = [];
+	var counter = sources.length;
+
+	// For each source defined, getHomeArticles
+	// This makes 3 API calls
+	sources.forEach(getHomeArticles);
+
+	function getHomeArticles(newsSource) {
+		console.log('newsSource code', newsSource.code);
+		var url = 'https://newsapi.org/v1/articles?source=' + newsSource.code + '&apiKey=' + newsKey;
+		$.getJSON(url, compileHomeArticles);
+	}
+
+	function compileHomeArticles(json) {
+		// Push the data to the staging array homeArticles
+		homeArticles.push(json.articles);
+
+		// Lower the counter after each push
+		// of data to homeArticles
+		counter--;
+
+		// When we've pushed from all the sources...
+		if (counter == 0) {
+			// Flatten homeArticles because 
+			// it's initially an array of arrays
+			homeArticles = [].concat.apply([], homeArticles);
+
+			displayHomeArticles()
+		}
+	}
+
+	function displayHomeArticles() {
+		// Let Handlebars do its thing
+		var template = Handlebars.compile(articleTemplate.innerHTML);
+		var homeArticlesHTML = template(homeArticles);
+		main.innerHTML = homeArticlesHTML;
+
+		// Hide popUp overlay
+		popUp.classList.add('hidden');
+
+		// Copy the consolidated data to
+		// sourceJson for easy access
+		sourceJson = homeArticles;
+	}
+}
+
+
+// Display Articles
+// (Single Source)
+//---------------------------
+// Access API
 function getArticles(newsSource) {
 	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
 	$.getJSON(url, displayArticles)
 		.fail(failedGet);
 }
 
-
-// Display Articles
-//---------------------------
 // Populate articles view
 function displayArticles(json) {
 	main.innerHTML = '';
@@ -117,7 +160,7 @@ function displayArticles(json) {
 	popUp.classList.add('hidden');
 
 	// Copy over data to sourceJson for easy access
-	sourceJson = json;
+	sourceJson = json.articles;
 }
 
 // Show preview
@@ -132,9 +175,9 @@ function articlePreviewContent(e) {
 	}
 
 	// Populate the preview content relative to the article index
-	articlePreviewTitle.innerHTML = sourceJson.articles[i].title;
-	articlePreviewDesc.innerHTML = sourceJson.articles[i].description;
-	articlePreviewLink.setAttribute('href', sourceJson.articles[i].url);
+	articlePreviewTitle.innerHTML = sourceJson[i].title;
+	articlePreviewDesc.innerHTML = sourceJson[i].description;
+	articlePreviewLink.setAttribute('href', sourceJson[i].url);
 }
 
 // Error messaging
@@ -149,31 +192,7 @@ function failedGet() {
 }
 
 
-function getHomeArticles(newsSource) {
-	var url = 'https://newsapi.org/v1/articles?source=' + newsSource + '&apiKey=' + newsKey;
-	$.getJSON(url, displayHomeArticles);
-}
 
-function displayHomeArticles(json) {
-	console.log('displayHomeArticles', json.articles);
-	homeArticles.push(json.articles);
-	homeArticles = [].concat.apply([], homeArticles);
-
-	
-}
-
-// Consolidated home view
-function showHome() {
-	getArticles(newsSource);
-	// forEach source call getArticles()
-	sources.forEach(getSource);
-
-	function getSource(i) {
-		var grabIt = getHomeArticles(i.code);
-
-		console.log(i.code);
-	}
-}
 
 
 // Helper functions
