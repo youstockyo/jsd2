@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Foodie Handlebars</title>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/foodie-anon.css">
+</head>
+<body>
+
+<h1>Foodie</h1>
+
+<form>
+	<input class="zip" placeholder="Zip code">
+</form>
+
+<div class="restaurant-available"></div>
+
+<ul class="results"></ul>
+
+<script id="restaurant-count" type="text/x-handlebars-template">
+	<p><span class="bold">{{total_entries}}</span> available restaurants in {{restaurants.0.postal_code}}</p>
+</script>
+
+<script id="restaurant-template" type="text/x-handlebars-template">
+	{{#each this}}
+		<li>
+			<img src="{{image_url}}">
+			<h2>{{name}}</h2>
+			<p>{{address}}</p>
+			<p>
+				<a href="{{reserve_url}}">Make a reservation</a>
+			</p>
+		</li>
+	{{/each}}
+</script>
+
+<!--
+	<li>
+		<img src="http://www.thaifoodandtravel.com/images/pad-thai-04.jpg">
+		<h2>Name</h2>
+		<p>Address</p>
+	</li>
+-->
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+<script src="js/content.js"></script>
+<script src="js/foodie-anon.js"></script>
+
+</body>
+</html>
