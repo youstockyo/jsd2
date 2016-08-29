@@ -30,11 +30,13 @@
 		<button type="submit">Run it!</button>
 	</form>
 
-	<audio controls>
-		<source src="https://api.soundcloud.com/tracks/270246078/stream?client_id=a6fd7031f106d30cca0acc1b77431c13">
+	<audio id="audio-player" controls>
+		<source>
 	</audio>
 	
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.js"></script>
+	<script src="https://connect.soundcloud.com/sdk/sdk-3.1.2.js"></script>
 	<script src="scripts/tracks.js"></script>
 	<script src="scripts/selecta.js"></script>
 </body>
