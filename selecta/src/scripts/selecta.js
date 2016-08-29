@@ -23,14 +23,7 @@ var audioSource = document.querySelector('#audio-player source');
 //---------------------------
 form.addEventListener('submit', makePlaylist);
 audioPlayer.addEventListener('ended', playNextTrack);
-
-
-// Event Handlers
-//---------------------------
-// function mixtapeSetup(e) {
-// 	e.preventDefault();
-// 	makePlaylist();
-// }
+audioSource.addEventListener('error', skipTrack);
 
 
 // Playlist Construction
@@ -106,17 +99,30 @@ function playNextTrack() {
 		audioSource.setAttribute('src', trackURLs[trackIndex]);
 		audioPlayer.load();
 		audioPlayer.play();
+		// audioSource.addEventListener('error', skipTrack);
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
 	} else {
 		audioPlayer.pause();
 		trackIndex = 0;
 		audioSource.setAttribute('src', trackURLs[trackIndex]);
+		audioPlayer.load();
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
 	}
 	
 }
 
-// TODO: Error handling for when tracks can't play
+// Error handling
+// If a track can't be played, skip to the next one
+function skipTrack() {
+	console.log('error');
+	trackIndex = trackIndex + 1;
+	console.log('trackIndex', trackIndex);
+	audioSource.setAttribute('src', trackURLs[trackIndex]);
+	audioPlayer.load();
+	if (!audioSource.error) {
+		audioPlayer.play();
+	}
+}
 
 
 
