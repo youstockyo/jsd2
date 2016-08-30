@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Maps</title>
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=500, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<link rel="stylesheet" href="css/maps.css">
+</head>
+<body>
+	<h1>Maps</h1>
+
+	<div class="map"></div>
+
+	
+	<!-- <img src ="https://maps.googleapis.com/maps/api/staticmap?center=37.790841, -122.40128&zoom=15&size=500x500&key=AIzaSyCxked12r3cSN8vz5fZJ0aTlfNyiVl1T10&maptype=hybrid"> -->
+
+
+	<script type="">
+
+	// Elements
+	//-------------------------
+	var map;
+	var mapElement = document.querySelector('.map');
+	var options = {
+		center: {lat: 37.790841, lng: -122.40128},
+		zoom: 16
+	}
+
+	function initMap() {
+		console.log('initMap');
+
+		// setup new google map object
+		map = new google.maps.Map(mapElement, options);
+
+		// setup new places api search
+		// var service = new google.maps.places.PlacesService(map);
+		// service.nearbySearch({
+		// 	location: {lat: 37.790841, lng: -122.40128},
+		// 	radius: 100,
+		// 	type: ['store']
+		// }, displayResults);
+
+		// callback function with search result data
+		// call createMarker 1 time for each place
+		// function displayResults(results, status) {
+		// 	console.log('displayResults');
+		// 	results.forEach(createMarker);
+		// }
+
+		// create one marker for each place
+		function createMarker(place) {
+			var marker = new google.maps.Marker({
+				map: map,
+				title: 'GA',
+				position: place.geometry.location
+			});
+		}
+
+		navigator.geolocation.getCurrentPosition(updateLocation);
+	}
+	
+
+	function updateLocation(position) {
+		console.log(position);
+		var lat = position.coords.latitude;
+		var lng = position.coords.longitude;
+
+		var marker = new google.maps.Marker({
+			map: map,
+			position: { lat: lat, lng: lng }
+		});
+	}
+
+
+	</script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCxked12r3cSN8vz5fZJ0aTlfNyiVl1T10&callback=initMap&libraries=places" async defer></script>
+	<script src="js/maps.js"></script>
+</body>
+</html>
