@@ -1,5 +1,6 @@
 // Setup
 //---------------------------
+var audio = new Audio();
 var finalPlaylist;
 var trackURLs = [];
 var trackIndex = 0;
@@ -15,15 +16,25 @@ SC.initialize({
 var form        = document.querySelector('form');
 var genreGroup  = document.querySelectorAll('input[name=genre-group]');
 var djPool      = document.querySelectorAll('.dj-pool');
-var audioPlayer = document.querySelector('#audio-player');
-var audioSource = document.querySelector('#audio-player source');
+var play = document.querySelector('.play');
+var pause = document.querySelector('.pause');
+var next = document.querySelector('.next');
 
 
 // Events
 //---------------------------
 form.addEventListener('submit', makePlaylist);
-audioPlayer.addEventListener('ended', playNextTrack);
-audioSource.addEventListener('error', skipTrack);
+audio.addEventListener('ended', playNextTrack);
+audio.addEventListener('error', skipTrack);
+next.addEventListener('click', playNextTrack);
+play.addEventListener('click', function() {
+	audio.play();
+	console.log(trackIndex);
+});
+pause.addEventListener('click', function() {
+	audio.pause();
+});
+
 
 
 // Playlist Construction
@@ -34,10 +45,13 @@ function makePlaylist(e) {
 	var djs = [];
 	var poolTracks = [];
 
+	// Safari does not allow forEach method on a nodeList (djPool),
+	// convert djPool to an array
+	djPoolArray = [].slice.call(djPool);
 
 	// Get selected DJs, push the selection(s)
 	// to the djs array
-	djPool.forEach(isChecked);
+	djPoolArray.forEach(isChecked);
 	function isChecked(i) {
 		if (i.checked) {
 			djs.push(i.value);
@@ -64,48 +78,44 @@ function makePlaylist(e) {
 		finalPlaylist = poolTracks.slice(0, 12);
 	}
 
-	console.log('playlist created', finalPlaylist);
-	loadTracks();
-}
-
-
-function loadTracks() {
-
+	console.log('finalPlaylist: playlist created', finalPlaylist);
+	
 	// build an array of track urls
 	finalPlaylist.forEach(finalTrackURLs);
 	function finalTrackURLs(trackID) {
 		var url = 'https://api.soundcloud.com/tracks/' + trackID + '/stream?client_id=a6fd7031f106d30cca0acc1b77431c13';
 		trackURLs.push(url);
 	}
-	console.log(trackURLs);
+	console.log('trackURLs:', trackURLs);
 
-	audioSource.setAttribute('src', trackURLs[0]);
-	audioPlayer.load();
+	// load the first track in the player
+	loadInitialTrack();
 }
 
 
 // Audio player
 //---------------------------
+function loadInitialTrack() {
+	audio.setAttribute('src', trackURLs[0]);
+	audio.load();
+}
 
 // Play next track when current track is finished playing
 function playNextTrack() {
 	var trackCount = trackURLs.length;
-	console.log('done');
-	console.log('trackIndex', trackIndex, 'trackCount', trackCount);
 
 	// Continue to next song
 	if ((trackIndex + 1) < trackCount) {
 		trackIndex = trackIndex + 1;
-		audioSource.setAttribute('src', trackURLs[trackIndex]);
-		audioPlayer.load();
-		audioPlayer.play();
-		// audioSource.addEventListener('error', skipTrack);
+		audio.setAttribute('src', trackURLs[trackIndex]);
+		audio.load();
+		audio.play();
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
 	} else {
-		audioPlayer.pause();
+		audio.pause();
 		trackIndex = 0;
-		audioSource.setAttribute('src', trackURLs[trackIndex]);
-		audioPlayer.load();
+		audio.setAttribute('src', trackURLs[trackIndex]);
+		audio.load();
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
 	}
 	
@@ -114,16 +124,17 @@ function playNextTrack() {
 // Error handling
 // If a track can't be played, skip to the next one
 function skipTrack() {
-	console.log('error');
+	console.log('error playing track');
 	trackIndex = trackIndex + 1;
 	console.log('trackIndex', trackIndex);
-	audioSource.setAttribute('src', trackURLs[trackIndex]);
-	audioPlayer.load();
-	if (!audioSource.error) {
-		audioPlayer.play();
-	}
+	audio.setAttribute('src', trackURLs[trackIndex]);
+	audio.load();
+	audio.play();
 }
 
+
+// Track details
+//---------------------------
 
 
 
