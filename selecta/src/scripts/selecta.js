@@ -18,6 +18,7 @@ var genreGroup      = document.querySelectorAll('input[name=genre-group]');
 var djPool          = document.querySelectorAll('.dj-pool');
 var playPauseButton = document.querySelector('.play-pause');
 var next            = document.querySelector('.next');
+var previous        = document.querySelector('.previous');
 var audioPlayer     = document.querySelector('.audio-player');
 var trackTitle      = document.querySelector('.track--title');
 var trackUser       = document.querySelector('.track--user');
@@ -29,14 +30,8 @@ form.addEventListener('submit', makePlaylist);
 audio.addEventListener('ended', playNextTrack);
 audio.addEventListener('error', skipTrack);
 next.addEventListener('click', playNextTrack);
+previous.addEventListener('click', playLastTrack);
 playPauseButton.addEventListener('click', togglePlayPause);
-// play.addEventListener('click', function() {
-// 	audio.play();
-// });
-// pause.addEventListener('click', function() {
-// 	audio.pause();
-// });
-
 
 
 // Playlist Construction
@@ -149,6 +144,29 @@ function playNextTrack() {
 	
 }
 
+function playLastTrack() {
+	var trackCount = trackURLs.length;
+
+	if ((trackIndex - 1) > -1) {
+		trackIndex = trackIndex - 1;
+		audio.setAttribute('src', trackURLs[trackIndex]);
+		audio.load();
+		audio.play();
+		playPauseButton.classList.add('playing');
+		playPauseButton.innerHTML = 'Pause';
+		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+		showCurrentTrackDetails();
+	} else {
+		audio.pause();
+		playPauseButton.classList.remove('playing');
+		playPauseButton.innerHTML = 'Play';
+		trackIndex = 0;
+		audio.setAttribute('src', trackURLs[trackIndex]);
+		audio.load();
+		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+	}
+}
+
 // Error handling
 // If a track can't be played, skip to the next one
 function skipTrack() {
@@ -158,6 +176,8 @@ function skipTrack() {
 	audio.setAttribute('src', trackURLs[trackIndex]);
 	audio.load();
 	audio.play();
+	playPauseButton.classList.add('playing');
+	playPauseButton.innerHTML = 'Pause';
 }
 
 
