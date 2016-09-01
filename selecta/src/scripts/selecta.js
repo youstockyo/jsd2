@@ -13,6 +13,7 @@ SC.initialize({
 
 // Structure
 //---------------------------
+var bgContainer = document.querySelector('.background-image');
 var form            = document.querySelector('form');
 var genreGroup      = document.querySelectorAll('input[name=genre-group]');
 var djPool          = document.querySelectorAll('.dj-pool');
@@ -115,10 +116,13 @@ function initialPlay() {
 	playPauseButton.classList.add('playing');
 	playPauseButton.innerHTML = 'Pause';
 
+	// audioPlayer.style.opacity = '1';
+	audioPlayer.classList.add('active');
+	bgContainer.style.opacity = '0.8';
 	showCurrentTrackDetails();
 }
 
-// Play next track when current track is finished playing
+// Use playNextTrack when current track is finished playing
 function playNextTrack() {
 	var trackCount = trackURLs.length;
 
@@ -131,6 +135,7 @@ function playNextTrack() {
 		playPauseButton.classList.add('playing');
 		playPauseButton.innerHTML = 'Pause';
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+
 		showCurrentTrackDetails();
 	} else {
 		audio.pause();
@@ -140,6 +145,8 @@ function playNextTrack() {
 		audio.setAttribute('src', trackURLs[trackIndex]);
 		audio.load();
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+
+		showCurrentTrackDetails();
 	}
 	
 }
@@ -155,6 +162,7 @@ function playLastTrack() {
 		playPauseButton.classList.add('playing');
 		playPauseButton.innerHTML = 'Pause';
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+
 		showCurrentTrackDetails();
 	} else {
 		audio.pause();
@@ -164,6 +172,8 @@ function playLastTrack() {
 		audio.setAttribute('src', trackURLs[trackIndex]);
 		audio.load();
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+
+		showCurrentTrackDetails();
 	}
 }
 
@@ -207,6 +217,7 @@ function showCurrentTrackDetails() {
 	var artwork = trackDetails[trackIndex].artwork_url;
 	var newArtwork = artwork.replace(/-large/i, '-t500x500');
 	audioPlayer.style.backgroundImage = 'url("' + newArtwork + '")';
+	bgContainer.style.backgroundImage = 'url("' + newArtwork + '")';
 
 	// display track title & artist/user
 	trackTitle.innerHTML = trackDetails[trackIndex].title;
