@@ -13,12 +13,14 @@ SC.initialize({
 
 // Structure
 //---------------------------
-var form       = document.querySelector('form');
-var genreGroup = document.querySelectorAll('input[name=genre-group]');
-var djPool     = document.querySelectorAll('.dj-pool');
-var play       = document.querySelector('.play');
-var pause      = document.querySelector('.pause');
-var next       = document.querySelector('.next');
+var form            = document.querySelector('form');
+var genreGroup      = document.querySelectorAll('input[name=genre-group]');
+var djPool          = document.querySelectorAll('.dj-pool');
+var playPauseButton = document.querySelector('.play-pause');
+var next            = document.querySelector('.next');
+var audioPlayer     = document.querySelector('.audio-player');
+var trackTitle      = document.querySelector('.track--title');
+var trackUser       = document.querySelector('.track--user');
 
 
 // Events
@@ -27,12 +29,13 @@ form.addEventListener('submit', makePlaylist);
 audio.addEventListener('ended', playNextTrack);
 audio.addEventListener('error', skipTrack);
 next.addEventListener('click', playNextTrack);
-play.addEventListener('click', function() {
-	audio.play();
-});
-pause.addEventListener('click', function() {
-	audio.pause();
-});
+playPauseButton.addEventListener('click', togglePlayPause);
+// play.addEventListener('click', function() {
+// 	audio.play();
+// });
+// pause.addEventListener('click', function() {
+// 	audio.pause();
+// });
 
 
 
@@ -112,6 +115,12 @@ function initialPlay() {
 	audio.load();
 	audio.play();
 	console.log('trackIndex', trackIndex);
+
+	// add playing class, change copy to 'pause'
+	playPauseButton.classList.add('playing');
+	playPauseButton.innerHTML = 'Pause';
+
+	showCurrentTrackDetails();
 }
 
 // Play next track when current track is finished playing
@@ -124,9 +133,14 @@ function playNextTrack() {
 		audio.setAttribute('src', trackURLs[trackIndex]);
 		audio.load();
 		audio.play();
+		playPauseButton.classList.add('playing');
+		playPauseButton.innerHTML = 'Pause';
 		console.log('trackIndex', trackIndex, 'trackCount', trackCount);
+		showCurrentTrackDetails();
 	} else {
 		audio.pause();
+		playPauseButton.classList.remove('playing');
+		playPauseButton.innerHTML = 'Play';
 		trackIndex = 0;
 		audio.setAttribute('src', trackURLs[trackIndex]);
 		audio.load();
@@ -147,9 +161,38 @@ function skipTrack() {
 }
 
 
+function togglePlayPause(e) {
+	e.preventDefault();
+
+	// if playing, pause the player on click
+	if (playPauseButton.classList.contains('playing')) {
+		audio.pause();
+		playPauseButton.innerHTML = 'Play';
+		console.log('pausing');
+		playPauseButton.classList.remove('playing');
+	} else {
+		audio.play();
+		playPauseButton.innerHTML = 'Pause';
+		console.log('playing');
+		playPauseButton.classList.add('playing');
+	}
+}
+
+
 // Track details
 //---------------------------
+function showCurrentTrackDetails() {
 
+	// display track artwork (grab the bigger size for better quality)
+	var artwork = trackDetails[trackIndex].artwork_url;
+	var newArtwork = artwork.replace(/-large/i, '-t500x500');
+	audioPlayer.style.backgroundImage = 'url("' + newArtwork + '")';
+
+	// display track title & artist/user
+	trackTitle.innerHTML = trackDetails[trackIndex].title;
+	trackUser.innerHTML = trackDetails[trackIndex].user.username;
+
+}
 
 
 

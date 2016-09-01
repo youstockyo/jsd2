@@ -1,0 +1,6 @@
+.audio-player {
+	@include span-columns(6);
+	height: 500px;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
